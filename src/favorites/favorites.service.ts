@@ -36,7 +36,10 @@ export class FavoritesService {
 
   addTrack(id: string): Track {
     const track = this.db.tracks.find((track) => track.id === id);
-    if (!track) throw new UnprocessableEntityException('Track is not found');
+    if (!track)
+      throw new UnprocessableEntityException(
+        'Track with this ID does not exist',
+      );
     this.db.favorites.tracks.push(id);
     return track;
   }
@@ -45,13 +48,19 @@ export class FavoritesService {
     const index = this.db.favorites.tracks.findIndex(
       (trackId) => trackId === id,
     );
-    if (index === -1) throw new NotFoundException('Track is not favorites');
+    if (index === -1)
+      throw new NotFoundException(
+        'This track is not on the list of favourites',
+      );
     this.db.favorites.tracks.splice(index, 1);
   }
 
   addAlbum(id: string): Album {
     const album = this.db.albums.find((album) => album.id === id);
-    if (!album) throw new UnprocessableEntityException('Track is not found');
+    if (!album)
+      throw new UnprocessableEntityException(
+        'Album with this ID does not exist',
+      );
     this.db.favorites.albums.push(id);
     return album;
   }
@@ -60,13 +69,19 @@ export class FavoritesService {
     const index = this.db.favorites.albums.findIndex(
       (albumId) => albumId === id,
     );
-    if (index === -1) throw new NotFoundException('Track is not favorites');
+    if (index === -1)
+      throw new NotFoundException(
+        'This album is not on the list of favourites',
+      );
     this.db.favorites.albums.splice(index, 1);
   }
 
   addArtist(id: string): Artist {
     const artist = this.db.artists.find((artist) => artist.id === id);
-    if (!artist) throw new UnprocessableEntityException('Track is not found');
+    if (!artist)
+      throw new UnprocessableEntityException(
+        'Artist with this ID does not exist',
+      );
     this.db.favorites.artists.push(id);
     return artist;
   }
@@ -75,7 +90,10 @@ export class FavoritesService {
     const index = this.db.favorites.artists.findIndex(
       (artistId) => artistId === id,
     );
-    if (index === -1) throw new NotFoundException('Track is not favorites');
+    if (index === -1)
+      throw new NotFoundException(
+        'This artist is not on the list of favourites',
+      );
     this.db.favorites.artists.splice(index, 1);
   }
 }
