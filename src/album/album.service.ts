@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Database } from 'src/db/db';
+import { TrackService } from 'src/track/track.service';
 import { Album } from './album.entity';
 import { AlbumDto } from './dto/album.dto';
 
 @Injectable()
 export class AlbumService {
-  constructor(private db: Database) {}
+  constructor(private db: Database, private trackService: TrackService) {}
 
   getAll(): Album[] {
     return this.db.albums;
@@ -23,17 +24,23 @@ export class AlbumService {
     return newAlbum;
   }
 
-  update(id: string, { name, year, artistId }: AlbumDto) {
-    const album = this.getOne(id);
-    album.name = name;
-    album.year = year;
-    album.artistId = artistId;
-    return album;
+  update(id: string, albumDto: AlbumDto) {
+    const index = this.db.albums.findIndex((album) => album.id === id);
+    if (index === -1) throw new NotFoundException('Artist is not found');
+    this.db.albums[index] = { id, ...albumDto };
+    return this.db.albums[index];
   }
 
   delete(id: string) {
     const index = this.db.albums.findIndex((album) => album.id === id);
     if (index === -1) throw new NotFoundException('Album is not found');
     this.db.albums.splice(index, 1);
+    this.trackService.updateAlbumId(id);
+  }
+
+  updateArtistId(id: string) {
+    this.db.albums.forEach((artist) => {
+      if (artist.artistId === id) artist.artistId = null;
+    });
   }
 }
