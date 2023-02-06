@@ -30,10 +30,6 @@ export class FavoritesService {
     };
   }
 
-  get() {
-    return this.db.favorites;
-  }
-
   addTrack(id: string): Track {
     const track = this.db.tracks.find((track) => track.id === id);
     if (!track)

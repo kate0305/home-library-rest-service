@@ -19,11 +19,6 @@ export class FavoritesController {
     return this.favsService.getAll();
   }
 
-  @Get('/all')
-  get() {
-    return this.favsService.get();
-  }
-
   @Post('track/:id')
   addTrack(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.favsService.addTrack(id);
