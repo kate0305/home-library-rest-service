@@ -8,7 +8,7 @@ export class TrackService {
   constructor(private db: Database) {}
 
   getAll(): Track[] {
-    return this.db.albums;
+    return this.db.tracks;
   }
 
   getOne(id: string): Track {
@@ -24,17 +24,27 @@ export class TrackService {
   }
 
   update(id: string, trackDTO: TrackDto) {
-    let track = this.getOne(id);
-    track = { id, ...trackDTO };
-    // track.name = name;
-    // track.year = year;
-    // track.artistId = artistId;
-    return track;
+    const index = this.db.tracks.findIndex((track) => track.id === id);
+    if (index === -1) throw new NotFoundException('Artist is not found');
+    this.db.tracks[index] = { id, ...trackDTO };
+    return this.db.tracks[index];
   }
 
   delete(id: string) {
     const index = this.db.tracks.findIndex((track) => track.id === id);
     if (index === -1) throw new NotFoundException('track is not found');
     this.db.tracks.splice(index, 1);
+  }
+
+  updateArtistId(id: string) {
+    this.db.tracks.forEach((track) => {
+      if (track.artistId === id) track.artistId = null;
+    });
+  }
+
+  updateAlbumId(id: string) {
+    this.db.tracks.forEach((track) => {
+      if (track.albumId === id) track.albumId = null;
+    });
   }
 }
