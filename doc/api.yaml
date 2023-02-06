@@ -18,6 +18,10 @@ components:
         login:
           type: string
           example: 'TestUser'
+        password:
+          type: string
+          writeOnly: true
+          example: 'TestPassword'
         version:
           type: number
           example: 1
@@ -30,6 +34,7 @@ components:
       required:
         - id
         - login
+        - password
         - version
         - createdAt
         - updatedAt
