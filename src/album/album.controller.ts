@@ -18,17 +18,17 @@ export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
   @Get()
-  getAll(): Album[] {
+  getAll() {
     return this.albumService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): Album {
+  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.albumService.getOne(id);
   }
 
   @Post()
-  create(@Body() albumDto: AlbumDto): Album {
+  create(@Body() albumDto: AlbumDto) {
     return this.albumService.create(albumDto);
   }
 
@@ -36,13 +36,13 @@ export class AlbumController {
   update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() albumDto: AlbumDto,
-  ): Album {
+  ) {
     return this.albumService.update(id, albumDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
+  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.albumService.delete(id);
   }
 }
