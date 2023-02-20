@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './user.entity';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -22,19 +21,19 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  getAll(): User[] {
+  getAll() {
     return this.userService.getAll();
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): User {
+  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.userService.getOne(id);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createUserDto: CreateUserDto): User {
+  create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
@@ -43,13 +42,13 @@ export class UserController {
   update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ): User {
+  ) {
     return this.userService.update(id, updatePasswordDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
+  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.userService.delete(id);
   }
 }
