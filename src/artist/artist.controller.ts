@@ -18,17 +18,17 @@ export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Get()
-  getAll(): Artist[] {
+  getAll() {
     return this.artistService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): Artist {
+  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.artistService.getOne(id);
   }
 
   @Post()
-  create(@Body() artistDto: ArtistDto): Artist {
+  create(@Body() artistDto: ArtistDto) {
     return this.artistService.create(artistDto);
   }
 
@@ -36,13 +36,13 @@ export class ArtistController {
   update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() artistDto: ArtistDto,
-  ): Artist {
+  ) {
     return this.artistService.update(id, artistDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
+  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.artistService.delete(id);
   }
 }
