@@ -10,7 +10,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { TrackDto } from './dto/track.dto';
-import { Track } from './track.entity';
 import { TrackService } from './track.service';
 
 @Controller('track')
@@ -18,17 +17,17 @@ export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
   @Get()
-  getAll(): Track[] {
+  getAll() {
     return this.trackService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): Track {
+  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.trackService.getOne(id);
   }
 
   @Post()
-  create(@Body() trackDto: TrackDto): Track {
+  create(@Body() trackDto: TrackDto) {
     return this.trackService.create(trackDto);
   }
 
@@ -36,13 +35,13 @@ export class TrackController {
   update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() trackDto: TrackDto,
-  ): Track {
+  ) {
     return this.trackService.update(id, trackDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
+  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.trackService.delete(id);
   }
 }
