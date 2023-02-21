@@ -71,10 +71,9 @@ export class UserService {
     if (!user) throw new NotFoundException('User is not found');
     if (user.password !== oldPassword)
       throw new ForbiddenException('Incorrect password');
-    user.version = ++user.version;
     const userUpdate = await this.prisma.user.update({
       where: { id: id },
-      data: { password: newPassword, ...user },
+      data: { password: newPassword, version: ++user.version },
       select: {
         id: true,
         login: true,
@@ -83,8 +82,8 @@ export class UserService {
         updatedAt: true,
       },
     });
-    const createTime = new Date(user.createdAt).getTime();
-    const updatedTime = new Date(user.updatedAt).getTime();
+    const createTime = new Date(userUpdate.createdAt).getTime();
+    const updatedTime = new Date(userUpdate.updatedAt).getTime();
     return { ...userUpdate, createdAt: createTime, updatedAt: updatedTime };
   }
 
