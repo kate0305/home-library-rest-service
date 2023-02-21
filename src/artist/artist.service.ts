@@ -19,15 +19,13 @@ export class ArtistService {
   }
 
   async getOne(id: string) {
-    try {
-      return await this.prisma.artist.findUnique({
-        where: {
-          id: id,
-        },
-      });
-    } catch (error) {
-      throw new NotFoundException('Artist is not found');
-    }
+    const artist = await this.prisma.artist.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!artist) throw new NotFoundException('Artist is not found');
+    return artist;
   }
 
   async create({ name, grammy }: ArtistDto) {

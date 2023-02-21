@@ -1,9 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
-import { Database } from 'src/db/db';
 import { FavoritesService } from 'src/favorites/favorites.service';
 import { TrackDto } from './dto/track.dto';
-import { Track } from './track.entity';
 
 @Injectable()
 export class TrackService {
@@ -44,21 +42,16 @@ export class TrackService {
       where: { id: id },
       data: { ...trackDTO },
     });
-    // const index = await this.prisma.track.findMany();.findIndex((track) => track.id === id);
-    // if (index === -1) throw new NotFoundException('Artist is not found');
-    // this.prisma.track.findMany();[index] = { id, ...trackDTO };
-    // return this.prisma.track.findMany();[index];
   }
 
   async delete(id: string) {
     await this.getOne(id);
-    return await this.prisma.artist.delete({
+    return await this.prisma.track.delete({
       where: { id: id },
     });
-    // const index = this.prisma.track.findMany();.findIndex((track) => track.id === id);
-    // if (index === -1) throw new NotFoundException('track is not found');
-    // this.prisma.track.findMany();.splice(index, 1);
-    // if (this.prisma.favor.findMany();tes.tracks.includes(id)) this.favsService.deleteTrack(id);
+  }
+  async deleteAll() {
+    return await this.prisma.track.deleteMany({});
   }
 
   async updateArtistId(id: string) {
