@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Artist } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { ArtistDto } from './dto/artist.dto';
 
@@ -6,11 +7,11 @@ import { ArtistDto } from './dto/artist.dto';
 export class ArtistService {
   constructor(private prisma: PrismaService) {}
 
-  async getAll() {
+  async getAll(): Promise<Artist[]> {
     return await this.prisma.artist.findMany();
   }
 
-  async getOne(id: string) {
+  async getOne(id: string): Promise<Artist> {
     const artist = await this.prisma.artist.findUnique({
       where: {
         id: id,
@@ -20,7 +21,7 @@ export class ArtistService {
     return artist;
   }
 
-  async create({ name, grammy }: ArtistDto) {
+  async create({ name, grammy }: ArtistDto): Promise<Artist> {
     return await this.prisma.artist.create({
       data: {
         name,
@@ -29,7 +30,7 @@ export class ArtistService {
     });
   }
 
-  async update(id: string, artistDto: ArtistDto) {
+  async update(id: string, artistDto: ArtistDto): Promise<Artist> {
     await this.getOne(id);
     return await this.prisma.artist.update({
       where: { id: id },
@@ -37,9 +38,9 @@ export class ArtistService {
     });
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     await this.getOne(id);
-    return await this.prisma.artist.delete({
+    await this.prisma.artist.delete({
       where: { id: id },
     });
   }
