@@ -8,6 +8,8 @@ RUN npm ci && npm cache clean --force
 
 COPY . .
 
+RUN npx prisma generate
+
 FROM node:18.14-alpine3.16
 
 COPY --from=develop /user/app/node_modules ./node_modules
