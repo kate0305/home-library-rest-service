@@ -1,20 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
-import { FavoritesService } from 'src/favorites/favorites.service';
 import { TrackDto } from './dto/track.dto';
+import { Track } from './track.entity';
 
 @Injectable()
 export class TrackService {
-  constructor(
-    private prisma: PrismaService,
-    private favsService: FavoritesService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async getAll() {
+  async getAll(): Promise<Track[]> {
     return await this.prisma.track.findMany();
   }
 
-  async getOne(id: string) {
+  async getOne(id: string): Promise<Track> {
     const track = await this.prisma.track.findUnique({
       where: {
         id: id,
@@ -24,7 +21,12 @@ export class TrackService {
     return track;
   }
 
-  async create({ name, artistId, albumId, duration }: TrackDto) {
+  async create({
+    name,
+    artistId,
+    albumId,
+    duration,
+  }: TrackDto): Promise<Track> {
     const newtrack = await this.prisma.track.create({
       data: {
         name,
@@ -36,7 +38,7 @@ export class TrackService {
     return newtrack;
   }
 
-  async update(id: string, trackDTO: TrackDto) {
+  async update(id: string, trackDTO: TrackDto): Promise<Track> {
     await this.getOne(id);
     return await this.prisma.track.update({
       where: { id: id },
@@ -44,27 +46,14 @@ export class TrackService {
     });
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     await this.getOne(id);
-    return await this.prisma.track.delete({
+    await this.prisma.track.delete({
       where: { id: id },
     });
   }
-  async deleteAll() {
-    return await this.prisma.track.deleteMany({});
-  }
 
-  async updateArtistId(id: string) {
-    const tracks = await this.prisma.track.findMany();
-    tracks.forEach((track) => {
-      if (track.artistId === id) track.artistId = null;
-    });
-  }
-
-  async updateAlbumId(id: string) {
-    const tracks = await this.prisma.track.findMany();
-    tracks.forEach((track) => {
-      if (track.albumId === id) track.albumId = null;
-    });
+  async deleteAll(): Promise<void> {
+    await this.prisma.track.deleteMany();
   }
 }
