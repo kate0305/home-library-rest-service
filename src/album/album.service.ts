@@ -1,24 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
-import { Database } from 'src/db/db';
-import { FavoritesService } from 'src/favorites/favorites.service';
-import { TrackService } from 'src/track/track.service';
-import { Album } from './album.entity';
 import { AlbumDto } from './dto/album.dto';
 
 @Injectable()
 export class AlbumService {
-  constructor(
-    private prisma: PrismaService,
-    private trackService: TrackService,
-    private favsService: FavoritesService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async getAll() {
+  async getAll(): Promise<AlbumDto[]> {
     return this.prisma.album.findMany();
   }
 
-  async getOne(id: string) {
+  async getOne(id: string): Promise<AlbumDto> {
     const album = await this.prisma.album.findUnique({
       where: {
         id: id,
@@ -28,7 +20,7 @@ export class AlbumService {
     return album;
   }
 
-  async create({ name, year, artistId }: AlbumDto) {
+  async create({ name, year, artistId }: AlbumDto): Promise<AlbumDto> {
     return await this.prisma.album.create({
       data: {
         name,
@@ -38,7 +30,7 @@ export class AlbumService {
     });
   }
 
-  async update(id: string, albumDto: AlbumDto) {
+  async update(id: string, albumDto: AlbumDto): Promise<AlbumDto> {
     await this.getOne(id);
     return await this.prisma.album.update({
       where: { id: id },
@@ -46,23 +38,10 @@ export class AlbumService {
     });
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<AlbumDto> {
     await this.getOne(id);
     return await this.prisma.album.delete({
       where: { id: id },
-    });
-    // const index = this.prisma.album.findIndex((album) => album.id === id);
-    // if (index === -1) throw new NotFoundException('Album is not found');
-    // this.prisma.album.splice(index, 1);
-
-    this.trackService.updateAlbumId(id);
-    // if (this.prisma.favorite.albums.includes(id)) this.favsService.deleteAlbum(id);
-  }
-
-  async updateArtistId(id: string) {
-    const tracks = await this.prisma.album.findMany();
-    tracks.forEach((artist) => {
-      if (artist.artistId === id) artist.artistId = null;
     });
   }
 }

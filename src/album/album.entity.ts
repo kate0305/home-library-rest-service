@@ -4,7 +4,7 @@ export class Album {
   id = uuidv4();
   name: string;
   year: number;
-  artistId: string | null; // refers to Artist
+  artistId: string | null;
 
   constructor(name: string, year: number, artistId: string | null) {
     this.name = name;

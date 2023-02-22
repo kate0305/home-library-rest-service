@@ -20,5 +20,5 @@ export class AlbumDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  artistId: string | null; // refers to Artist
+  artistId: string | null;
 }
