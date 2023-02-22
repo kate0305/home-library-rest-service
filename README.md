@@ -10,7 +10,7 @@
 ```
 git clone git@github.com:kate0305/nodejs2022Q4-service.git
 cd nodejs2022Q4-service
-git checkout dev-part1
+git checkout dev-part2
 example.env file rename to .env
 ```
 
@@ -20,15 +20,17 @@ example.env file rename to .env
 npm install
 ```
 
-## Running application
+## Running application in Docker
 
 ```
-npm start
+npm run docker
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+## Scanning Docker image with api
+
+```
+npm run docker:scan
+```
 
 ## Testing
 
