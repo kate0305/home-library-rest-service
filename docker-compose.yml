@@ -32,7 +32,8 @@ services:
     networks:
       - base-network
 volumes:
-  postgres:
+  postgresData:
+  postgresLog:
 networks:
   base-network:
     driver: bridge
