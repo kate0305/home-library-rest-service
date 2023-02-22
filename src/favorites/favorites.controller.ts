@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
+import { Album, Artist, Track } from '@prisma/client';
 import { FavoritesService } from './favorites.service';
 import { FavsResponse } from './interfaces/favsResponse.interface';
 
@@ -15,46 +16,57 @@ export class FavoritesController {
   constructor(private readonly favsService: FavoritesService) {}
 
   @Get()
-  getAll(): FavsResponse {
-    return this.favsService.getAll();
+  async getAll(): Promise<FavsResponse> {
+    return await this.favsService.getAll();
+  }
+
+  @Delete()
+  async deleteAll(): Promise<void> {
+    await this.favsService.deleteAll();
   }
 
   @Post('track/:id')
-  addTrack(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favsService.addTrack(id);
+  async addTrack(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<Track> {
+    return await this.favsService.addTrack(id);
   }
 
   @Delete('track/:id')
   @HttpCode(204)
-  deleteTrack(
+  async deleteTrack(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): void {
-    return this.favsService.deleteTrack(id);
+  ): Promise<void> {
+    await this.favsService.deleteTrack(id);
   }
 
   @Post('album/:id')
-  addAlbum(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favsService.addAlbum(id);
+  async addAlbum(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<Album> {
+    return await this.favsService.addAlbum(id);
   }
 
   @Delete('album/:id')
   @HttpCode(204)
-  deleteAlbum(
+  async deleteAlbum(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): void {
-    return this.favsService.deleteAlbum(id);
+  ): Promise<void> {
+    await this.favsService.deleteAlbum(id);
   }
 
   @Post('artist/:id')
-  addArtist(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favsService.addArtist(id);
+  async addArtist(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<Artist> {
+    return await this.favsService.addArtist(id);
   }
 
   @Delete('artist/:id')
   @HttpCode(204)
-  deleteArtist(
+  async deleteArtist(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): void {
-    return this.favsService.deleteArtist(id);
+  ): Promise<void> {
+    await this.favsService.deleteArtist(id);
   }
 }
