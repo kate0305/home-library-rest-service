@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,28 +17,41 @@ model User {
 }
 
 model Artist {
-  id     String  @id @default(uuid())
-  name   String
-  grammy Boolean
-  tracks Track[]
-  albums Album[]
+  id          String     @id @default(uuid())
+  name        String
+  grammy      Boolean
+  tracks      Track[]
+  albums      Album[]
+  favorites   Favorites? @relation(fields: [favoritesId], references: [id])
+  favoritesId String?
 }
 
 model Album {
-  id       String  @id @default(uuid())
-  name     String
-  year     Int
-  author   Artist  @relation(fields: [artistId], references: [id])
-  artistId String
-  tracks   Track[]
+  id          String     @id @default(uuid())
+  name        String
+  year        Int
+  author      Artist?    @relation(fields: [artistId], references: [id])
+  artistId    String?
+  tracks      Track[]
+  favorites   Favorites? @relation(fields: [favoritesId], references: [id])
+  favoritesId String?
 }
 
 model Track {
-  id       String @id @default(uuid())
-  name     String
-  author   Artist @relation(fields: [artistId], references: [id])
-  artistId String
-  album    Album  @relation(fields: [albumId], references: [id])
-  albumId  String
-  duration Int
+  id          String     @id @default(uuid())
+  name        String
+  author      Artist?    @relation(fields: [artistId], references: [id])
+  artistId    String?
+  album       Album?     @relation(fields: [albumId], references: [id])
+  albumId     String?
+  duration    Int
+  favorites   Favorites? @relation(fields: [favoritesId], references: [id])
+  favoritesId String?
+}
+
+model Favorites {
+  id      String   @id @default(uuid())
+  artists Artist[]
+  albums  Album[]
+  tracks  Track[]
 }
