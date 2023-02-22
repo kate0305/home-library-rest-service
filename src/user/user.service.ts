@@ -6,12 +6,13 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { PrismaService } from '../database/prisma.service';
+import { User } from './user.interface';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async getAll() {
+  async getAll(): Promise<User[]> {
     const users = await this.prisma.user.findMany({
       select: {
         id: true,
@@ -28,7 +29,7 @@ export class UserService {
     });
   }
 
-  async getOne(id: string) {
+  async getOne(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: {
         id: id,
@@ -47,7 +48,7 @@ export class UserService {
     return { ...user, createdAt: createTime, updatedAt: updatedTime };
   }
 
-  async create({ login, password }: CreateUserDto) {
+  async create({ login, password }: CreateUserDto): Promise<User> {
     const user = await this.prisma.user.create({
       data: {
         login,
@@ -66,7 +67,10 @@ export class UserService {
     return { ...user, createdAt: createTime, updatedAt: updatedTime };
   }
 
-  async update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
+  async update(
+    id: string,
+    { oldPassword, newPassword }: UpdatePasswordDto,
+  ): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id: id } });
     if (!user) throw new NotFoundException('User is not found');
     if (user.password !== oldPassword)
@@ -87,10 +91,10 @@ export class UserService {
     return { ...userUpdate, createdAt: createTime, updatedAt: updatedTime };
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     const user = await this.prisma.user.findUnique({ where: { id: id } });
     if (!user) throw new NotFoundException('User is not found');
-    return await this.prisma.user.delete({
+    await this.prisma.user.delete({
       where: { id: id },
     });
   }
