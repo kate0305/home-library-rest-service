@@ -9,7 +9,6 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Artist } from './artist.entity';
 import { ArtistService } from './artist.service';
 import { ArtistDto } from './dto/artist.dto';
 
@@ -18,31 +17,35 @@ export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Get()
-  getAll() {
-    return this.artistService.getAll();
+  async getAll(): Promise<ArtistDto[]> {
+    return await this.artistService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.artistService.getOne(id);
+  async getOne(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<ArtistDto> {
+    return await this.artistService.getOne(id);
   }
 
   @Post()
-  create(@Body() artistDto: ArtistDto) {
-    return this.artistService.create(artistDto);
+  async create(@Body() artistDto: ArtistDto): Promise<ArtistDto> {
+    return await this.artistService.create(artistDto);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() artistDto: ArtistDto,
-  ) {
-    return this.artistService.update(id, artistDto);
+  ): Promise<ArtistDto> {
+    return await this.artistService.update(id, artistDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.artistService.delete(id);
+  async delete(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<ArtistDto> {
+    return await this.artistService.delete(id);
   }
 }

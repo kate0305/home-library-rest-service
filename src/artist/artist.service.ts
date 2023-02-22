@@ -1,18 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AlbumService } from 'src/album/album.service';
 import { PrismaService } from 'src/database/prisma.service';
-import { FavoritesService } from 'src/favorites/favorites.service';
-import { TrackService } from 'src/track/track.service';
 import { ArtistDto } from './dto/artist.dto';
 
 @Injectable()
 export class ArtistService {
-  constructor(
-    private prisma: PrismaService,
-    private albumService: AlbumService,
-    private trackService: TrackService,
-    private favsService: FavoritesService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async getAll() {
     return await this.prisma.artist.findMany();
