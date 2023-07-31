@@ -10,7 +10,7 @@
 ```
 git clone git@github.com:kate0305/nodejs2022Q4-service.git
 cd nodejs2022Q4-service
-git checkout dev
+git checkout dev-part1
 example.env file rename to .env
 ```
 
