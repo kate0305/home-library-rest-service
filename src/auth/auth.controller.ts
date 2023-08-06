@@ -10,7 +10,9 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/user.entity';
+import { Public } from './custom-public-decorator';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -28,7 +30,7 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('login')
+  @Post('refresh')
   async refresh(@Body() createUserDto: CreateUserDto) {
     return await this.authService.signIn(createUserDto);
   }
