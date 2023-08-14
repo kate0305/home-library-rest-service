@@ -21,7 +21,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "docker": "docker-compose up",
-    "docker:scan": "docker scan nodejs2022q4-service-api"
+    "docker:scan": "docker scout quickview nodejs2023q2-service-api"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
