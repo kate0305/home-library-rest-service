@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/user.entity';
 import { Public } from './custom-public-decorator';
+import { RefreshDto } from './dto/refresh.dto';
 
 @Public()
 @Controller('auth')
@@ -31,7 +32,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('refresh')
-  async refresh(@Body() createUserDto: CreateUserDto) {
-    return await this.authService.signIn(createUserDto);
+  async refresh(@Body() refresh: RefreshDto) {
+    return await this.authService.refresh(refresh);
   }
 }

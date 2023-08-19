@@ -1,4 +1,4 @@
-export interface ResponseBody {
+export interface ResponseBodyWithTokens {
   accessToken: string;
   refreshToken: string;
 }
