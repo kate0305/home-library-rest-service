@@ -5,13 +5,16 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  UnauthorizedException,
   UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/user.entity';
-import { Public } from './custom-public-decorator';
+import { Public } from './decorators/custom-public.decorator';
 import { RefreshDto } from './dto/refresh.dto';
+import { BodyWithRefresh } from './decorators/custom-refresh.decorator';
 
 @Public()
 @Controller('auth')
@@ -32,7 +35,18 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('refresh')
-  async refresh(@Body() refresh: RefreshDto) {
+  async refresh(
+    @BodyWithRefresh(
+      new ValidationPipe({
+        validateCustomDecorators: true,
+        whitelist: true,
+        errorHttpStatusCode: HttpStatus.UNAUTHORIZED,
+        exceptionFactory: () =>
+          new UnauthorizedException('Refresh token does not exist'),
+      }),
+    )
+    refresh: RefreshDto,
+  ) {
     return await this.authService.refresh(refresh);
   }
 }
