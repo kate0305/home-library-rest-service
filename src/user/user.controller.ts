@@ -13,8 +13,8 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './user.interface';
 import { UserService } from './user.service';
+import { User } from './user.entity';
 
 @Controller('user')
 export class UserController {
@@ -23,7 +23,8 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async getAll(): Promise<User[]> {
-    return await this.userService.getAll();
+    const users = await this.userService.getAll();
+    return users.map((user) => new User(user));
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -31,13 +32,22 @@ export class UserController {
   async getOne(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ): Promise<User> {
-    return await this.userService.getOne(id);
+    const user = await this.userService.getOne(id);
+    return new User(user);
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get(':id')
+  async getOneByLogin(@Param('login') login: string) {
+    const user = await this.userService.getOne(login);
+    return new User(user);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return await this.userService.create(createUserDto);
+    const user = await this.userService.create(createUserDto);
+    return new User(user);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -46,7 +56,8 @@ export class UserController {
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<User> {
-    return await this.userService.update(id, updatePasswordDto);
+    const user = await this.userService.update(id, updatePasswordDto);
+    return new User(user);
   }
 
   @Delete(':id')
