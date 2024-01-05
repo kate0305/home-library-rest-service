@@ -18,31 +18,39 @@ export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
   @Get()
-  getAll(): Track[] {
-    return this.trackService.getAll();
+  async getAll(): Promise<Track[]> {
+    return await this.trackService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): Track {
-    return this.trackService.getOne(id);
+  async getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return await this.trackService.getOne(id);
   }
 
   @Post()
-  create(@Body() trackDto: TrackDto): Track {
-    return this.trackService.create(trackDto);
+  async create(@Body() trackDto: TrackDto): Promise<Track> {
+    return await this.trackService.create(trackDto);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() trackDto: TrackDto,
-  ): Track {
-    return this.trackService.update(id, trackDto);
+  ): Promise<Track> {
+    return await this.trackService.update(id, trackDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
-    return this.trackService.delete(id);
+  async delete(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<void> {
+    await this.trackService.delete(id);
+  }
+
+  @Delete()
+  @HttpCode(204)
+  async deleteAll(): Promise<void> {
+    await this.trackService.deleteAll();
   }
 }

@@ -1,19 +1,17 @@
 import { Exclude } from 'class-transformer';
-import { v4 as uuidv4 } from 'uuid';
 
 export class User {
-  id = uuidv4();
+  id: string;
   login: string;
 
   @Exclude()
   password: string;
 
-  version = 1;
-  createdAt = Date.now();
-  updatedAt = Date.now();
+  version: number;
+  createdAt: number;
+  updatedAt: number;
 
-  constructor(login: string, password: string) {
-    this.login = login;
-    this.password = password;
+  constructor(user: Partial<User>) {
+    Object.assign(this, user);
   }
 }

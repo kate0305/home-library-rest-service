@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  api:
+    container_name: api
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - database
+    volumes:
+      - .:/user/app
+      - /user/app/node_modules
+    networks:
+      - base-network
+  database:
+    container_name: database
+    build: ./database/
+    restart: unless-stopped
+    env_file:
+        - .env
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    volumes:
+      - postgresData:/var/lib/postgresql/data
+      - postgresLog:/var/lib/postgresql/log
+    networks:
+      - base-network
+volumes:
+  postgresData:
+  postgresLog:
+networks:
+  base-network:
+    driver: bridge

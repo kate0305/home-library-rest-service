@@ -9,7 +9,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Artist } from './artist.entity';
+import { Artist } from '@prisma/client';
 import { ArtistService } from './artist.service';
 import { ArtistDto } from './dto/artist.dto';
 
@@ -18,31 +18,35 @@ export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Get()
-  getAll(): Artist[] {
-    return this.artistService.getAll();
+  async getAll(): Promise<Artist[]> {
+    return await this.artistService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): Artist {
-    return this.artistService.getOne(id);
+  async getOne(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<Artist> {
+    return await this.artistService.getOne(id);
   }
 
   @Post()
-  create(@Body() artistDto: ArtistDto): Artist {
-    return this.artistService.create(artistDto);
+  async create(@Body() artistDto: ArtistDto): Promise<Artist> {
+    return await this.artistService.create(artistDto);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() artistDto: ArtistDto,
-  ): Artist {
-    return this.artistService.update(id, artistDto);
+  ): Promise<Artist> {
+    return await this.artistService.update(id, artistDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
-    return this.artistService.delete(id);
+  async delete(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<void> {
+    await this.artistService.delete(id);
   }
 }

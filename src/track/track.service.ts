@@ -1,52 +1,59 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Database } from 'src/db/db';
-import { FavoritesService } from 'src/favorites/favorites.service';
+import { PrismaService } from 'src/database/prisma.service';
 import { TrackDto } from './dto/track.dto';
 import { Track } from './track.entity';
 
 @Injectable()
 export class TrackService {
-  constructor(private db: Database, private favsService: FavoritesService) {}
+  constructor(private prisma: PrismaService) {}
 
-  getAll(): Track[] {
-    return this.db.tracks;
+  async getAll(): Promise<Track[]> {
+    return await this.prisma.track.findMany();
   }
 
-  getOne(id: string): Track {
-    const track = this.db.tracks.find((track) => track.id === id);
+  async getOne(id: string): Promise<Track> {
+    const track = await this.prisma.track.findUnique({
+      where: {
+        id: id,
+      },
+    });
     if (!track) throw new NotFoundException('track is not found');
     return track;
   }
 
-  create({ name, artistId, albumId, duration }: TrackDto) {
-    const newtrack = new Track(name, artistId, albumId, duration);
-    this.db.tracks.push(newtrack);
+  async create({
+    name,
+    artistId,
+    albumId,
+    duration,
+  }: TrackDto): Promise<Track> {
+    const newtrack = await this.prisma.track.create({
+      data: {
+        name,
+        artistId,
+        albumId,
+        duration,
+      },
+    });
     return newtrack;
   }
 
-  update(id: string, trackDTO: TrackDto) {
-    const index = this.db.tracks.findIndex((track) => track.id === id);
-    if (index === -1) throw new NotFoundException('Artist is not found');
-    this.db.tracks[index] = { id, ...trackDTO };
-    return this.db.tracks[index];
-  }
-
-  delete(id: string) {
-    const index = this.db.tracks.findIndex((track) => track.id === id);
-    if (index === -1) throw new NotFoundException('track is not found');
-    this.db.tracks.splice(index, 1);
-    if (this.db.favorites.tracks.includes(id)) this.favsService.deleteTrack(id);
-  }
-
-  updateArtistId(id: string) {
-    this.db.tracks.forEach((track) => {
-      if (track.artistId === id) track.artistId = null;
+  async update(id: string, trackDTO: TrackDto): Promise<Track> {
+    await this.getOne(id);
+    return await this.prisma.track.update({
+      where: { id: id },
+      data: { ...trackDTO },
     });
   }
 
-  updateAlbumId(id: string) {
-    this.db.tracks.forEach((track) => {
-      if (track.albumId === id) track.albumId = null;
+  async delete(id: string): Promise<void> {
+    await this.getOne(id);
+    await this.prisma.track.delete({
+      where: { id: id },
     });
+  }
+
+  async deleteAll(): Promise<void> {
+    await this.prisma.track.deleteMany();
   }
 }

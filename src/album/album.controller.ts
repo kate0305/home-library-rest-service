@@ -9,7 +9,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Album } from './album.entity';
+import { Album } from '@prisma/client';
 import { AlbumService } from './album.service';
 import { AlbumDto } from './dto/album.dto';
 
@@ -18,31 +18,35 @@ export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
   @Get()
-  getAll(): Album[] {
-    return this.albumService.getAll();
+  async getAll(): Promise<Album[]> {
+    return await this.albumService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): Album {
-    return this.albumService.getOne(id);
+  async getOne(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<Album> {
+    return await this.albumService.getOne(id);
   }
 
   @Post()
-  create(@Body() albumDto: AlbumDto): Album {
-    return this.albumService.create(albumDto);
+  async create(@Body() albumDto: AlbumDto): Promise<Album> {
+    return await this.albumService.create(albumDto);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() albumDto: AlbumDto,
-  ): Album {
-    return this.albumService.update(id, albumDto);
+  ): Promise<Album> {
+    return await this.albumService.update(id, albumDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
-    return this.albumService.delete(id);
+  async delete(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<void> {
+    await this.albumService.delete(id);
   }
 }
