@@ -1,5 +1,8 @@
 # Home Library Service
 
+## Description
+Home Library service is a NestJS application that allows `Users` to create, read, update, delete `Artists`, `Tracks` and `Albums` and add them to `Favourites` in their own home library.
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
@@ -8,8 +11,8 @@
 ## Downloading
 
 ```
-git clone git@github.com:kate0305/nodejs2022Q4-service.git
-cd nodejs2022Q4-service
+git clone git@github.com:kate0305/home-library-rest-service.git
+cd home-library-rest-service
 example.env file rename to .env
 ```
 
